@@ -6,7 +6,8 @@ Welcome to my portfolio repository! This repository contains examples of past pr
 
 In this repository, you'll find:
 
-- **QA Table with User Defined Variable Sizes**: A team of internal agents needed a way to QA the work of offshore teams. The QA team was utilized for many different projects of varying scope and didn't have the bandwidth to have a consistent team reviewing these cases. Due to this variability and the large volume of cases I created a report that would allow them to adjust the volume of the examples they needed to QA by multiple factors. This allowed them to adjust for the bandwidth of the team, as well as pull specific examples they may have needed to dive deeper into as part of an investigation.
+- **QA Table with User Defined Variable Sizes**:
+  A team of internal agents needed a way to QA the work of offshore teams. The QA team was utilized for many different projects of varying scope and didn't have the bandwidth to have a consistent team reviewing these cases. Due to this variability and the large volume of cases I created a report that would allow them to adjust the volume of the examples they needed to QA by multiple factors. This allowed them to adjust for the bandwidth of the team, as well as pull specific examples they may have needed to dive deeper into as part of an investigation.
   
 - **[Project 2 Name]**: Brief description of the project, including the key objectives and outcomes.
 - **[Project 3 Name]**: Brief description of the project, including the key objectives and outcomes.
