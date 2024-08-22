@@ -1,0 +1,104 @@
+-- Using Liquid to define what variables a user can set when running the report and what values are available
+
+{% form %}
+
+agent: 
+    type: multiselect
+    description: 'Use this to filter the results to documents actioned by the agents you select'
+    default: all
+    options: 
+        values: actor
+        
+site:
+   type: multiselect
+   description: 'Use this to filter the results to documents actioned by agents from the site you select'
+   default: all 
+   options: 
+      values: site 
+      
+email: 
+   type: text
+   description: 'Use this to filter down to particular email domains separated by a comma if there are multiple. Example: gmail, outlook, aol'
+   default: ''
+           
+doc_review: 
+    type: multiselect
+    description: 'Use this to filter results to only those that are from agents on our offshore doc review team'
+    default: ''
+    labels: 'Doc Review Only'
+    options: [
+              [TRUE],
+              [FALSE]
+             ]
+
+document_type:
+    type: multiselect
+    description: 'Set the desired document type(s) to be included in this QA pull'
+    default: all
+    options: 
+        values: document_type 
+
+start_date: 
+    type: date 
+    description: 'Defaults to 8 days prior to today'
+    default: {{ 'now' | date: '%s' | minus: 691200 | date: '%Y-%m-%d' }} 
+    
+end_date: 
+    type: date 
+    description: 'Defaults to yesterday'
+    default: {{ 'now' | date: '%s' | minus: 86400 | date: '%Y-%m-%d' }} 
+
+percentage: 
+    type: text
+    description: 'Use this to scale the percentage of the total cases you want to surface in the QA pull. Scales from 0.1% - 100%. Do not include a % sign'
+    default: 100
+
+row_num:
+    type: text
+    description: 'Set the maximum amount of documents you want to see from each agent'
+    default: 100000000
+
+rejected_reason: 
+    type: multiselect
+    default: ''
+    labels: 'Rejection Reasons'
+    options:
+      values: rejected_reason
+      
+status: 
+    type: multiselect 
+    default: all
+    labels: 'Document Status'
+    options: [
+              [Approved, approved],
+              [Rejected, rejected]
+             ]
+
+fraud_score: 
+    type: multiselect
+    default: all
+    labels: 'Fraud Level'
+    options: [
+              [None, 'None'],
+              [Very Low, 'Very Low'],
+              [Low, 'Low'],
+              [Medium, 'Medium'],
+              [High, 'High'],
+              [Very High, 'Very High'],
+             ]
+
+region: 
+  type: multiselect
+  description: 'Select any number of regions you want to include documents from for the QA pull. Region is defined by the users preferred region'
+  default: all
+  options: 
+      values: region 
+      
+state: 
+  type: multiselect
+  description: 'Select any number of states you want to include documents from for the QA pull. State is defined by the users preferred region'
+  default: all
+  options: 
+      values: state
+
+{% endform %}
