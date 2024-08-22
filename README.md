@@ -23,7 +23,8 @@ Throughout these projects, I have utilized a range of tools and technologies, in
 - **Mode**
     - Liquid/Parameters
 - **Excel / Google Sheets**
-- **Trino SQL**
+- **Presto / Trino / Snowflake SQL**
+- **Jira**
 
 ## How to Use This Repository
 
