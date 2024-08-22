@@ -1,0 +1,368 @@
+
+DROP TABLE IF EXISTS etl.document_qa_master;
+CREATE TABLE etl.document_qa_master AS (
+WITH 
+guarantee_info AS (
+      SELECT user_id 
+             ,  offer_created_at AS incentive_created_at
+             ,  offer_completed_at AS incentive_completed_at 
+             ,  incentive_name
+             ,  incentive_id 
+             ,  offer_status
+             ,  MAP_VALUES(incentive_requirement_detailed)[1] AS incentive_value
+             ,  CASE WHEN incentive_currency = 'CAD' THEN amount_paid * .75 
+                     ELSE amount_paid END AS amount_paid
+        FROM schema.table_core_incentive_exposure
+       WHERE ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+         AND incentive_name IN ('referral_acquisition_referee', 'referral_acquisition_referrer', 'rider_upsell_incentive', 'organic_incentive', 'paid_media_incentive')
+)
+
+, off_boards AS (
+      SELECT user_id 
+             ,  MIN_BY(block_reason, block_added_at) AS off_board_reason
+             ,  MIN(block_added_at) AS off_boarded_at
+             ,  block_removed_at AS off_board_removed_at
+        FROM schema.table_dimension_block_history b 
+       WHERE user_id IN (SELECT user_id FROM guarantee_info)
+    GROUP BY 1,4
+)
+
+, guarantee_payouts AS (
+      SELECT eg.offer_id
+             ,  eg.offer_type
+             ,  eg.user_id
+             ,  MAX(eg.intended_pay_time) as pay_time
+             ,  MAX_BY(eg.bonus_amount_minor, eg.occurred_at) * .01 as payout_amount
+             ,  rb.application_referring_company_id AS referring_company_id
+             ,  rb.application_referrer_payment_amount AS referrer_payment
+        FROM schema.table_event_offer_paid_out eg
+   LEFT JOIN schema.table_dimension_applicant_funnel rb
+          ON rb.user_id = eg.user_id 
+       WHERE eg.ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY as VARCHAR)
+    GROUP BY 1,2,3,6,7
+)
+
+, applied_drivers AS (
+      SELECT af.applied_at
+             ,  af.user_id
+             ,  us.email
+             ,  af.region_applied
+             ,  af.region_approved
+             ,  af.region_activated
+        FROM schema.table_dimension_applicant_funnel af
+        JOIN schema.table_event_user_signup us 
+          ON us.user_id = af.user_id
+       WHERE us.ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+         AND af.applied_at >= CURRENT_DATE - INTERVAL '30' DAY
+)
+
+, driver_base_emailage AS ( 
+      SELECT user_id 
+        FROM schema.table_fact_applicant_funnel 
+       WHERE applied_at > TIMESTAMP '2023-03-20'
+)
+
+, driver_base_shipping AS ( 
+      SELECT applied_at 
+             ,  user_id 
+             ,  region_approved.state AS state_approved
+             ,  shipping_state 
+        FROM schema.table_dimension_applicants ai
+   LEFT JOIN schema.table_core_regions region_approved
+          ON ai.region_approved = region_approved.region 
+       WHERE user_id IN (SELECT user_id FROM guarantee_info)
+         AND ai.applied_at >= CURRENT_DATE - INTERVAL '30' DAY
+    GROUP BY 1,2,3,4
+)
+, unauth_offboards AS (
+      SELECT user_id 
+             ,  MAX_BY(block_reason, block_added_at) AS block_reason
+             ,  MAX(block_added_at) AS block_added_at 
+        FROM schema.dimension_table_user_block_history
+       WHERE block_reason IN ('Manual Off-board - Unauthorized Driving - Permanent', 'Manual Off-board - Unauthorized Driving')
+         AND (block_added_at > block_removed_at OR block_removed_at IS NULL)
+         AND block_added_at >= date'2023-03-20'
+    GROUP BY 1
+)
+
+, incentives AS ( 
+      SELECT user_id 
+             , incentive_id 
+        FROM schema.table_fact_incentive_exposures a
+       WHERE a.ds IS NOT NULL
+         AND a.offer_created_at >= DATE('2022-05-01')
+         AND incentive_id in ('id1', 'id2', 'id3', 'id4')
+)
+
+, identified AS ( 
+      SELECT user_id 
+        FROM schema.table_event_user_signup us 
+       WHERE email LIKE '%chicago.gb.net%' OR email LIKE '%mybox.one%' OR email LIKE '%boranora.com%' OR email LIKE '%proton.me%' 
+             OR email LIKE '%pm.me%' OR email LIKE '%chicago.gb.net%' OR email LIKE '%onebeusa.com%' OR email LIKE '%appbeusa.com%'
+             OR email LIKE '%toyota2023.33mail.com%'
+         AND ds >= '2022-01-01'
+    GROUP BY 1
+)
+
+, emailage_one as(
+      SELECT triggering_user_id
+             ,  MAX(occurred_at) AS max_time
+        FROM schema.table_event_email_address_metadata_recorded
+       WHERE ds >= '2020-01-01'
+    GROUP BY 1
+)
+
+, emailage_two as(
+      SELECT a.triggering_user_id
+             ,  a.email_existence_status
+             ,  a.emailage_score
+             ,  SUBSTR(fraud_risk, 4) as fraud_risk
+             ,  domain_risk_level
+             ,  emailage_advice
+             ,  emailage_risk_band
+             ,  emailage_reason
+      FROM schema.table_event_email_address_metadata_recorded a
+      JOIN emailage_one b
+        ON a.triggering_user_id = b.triggering_user_id
+       AND a.occurred_at = b.max_time
+     WHERE a.ds  >= '2020-01-01'
+)
+
+, applicants AS (
+      SELECT ap.user_id
+             ,  ai.applied_at
+             ,  ai.region_applied
+             ,  ai.region_approved
+             ,  ai.region_activated
+             ,  ap.bonus_code 
+             ,  ap.bonus_type
+        FROM schema.table_event_acquisition_bonus_record_created ap
+   LEFT JOIN schema.table_dimension_applicant_funnel ai
+          ON ai.user_id = ap.user_id 
+       WHERE ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+         AND bonus_type IN ('referee_new_driver', 'sign_on_bonus_paid_acquisition')
+         AND applied_at >= CURRENT_DATE - INTERVAL '30' DAY
+)
+
+, activated_drivers AS (
+      SELECT user_id
+             ,  code 
+             ,  guarantees_type
+             ,  region 
+             ,  created_at_ms 
+             ,  end_time
+             ,  required_ride_num
+             ,  (amount_minor * .01) AS incentive_amount
+        FROM schema.table_event_guarantees_offer_create 
+       WHERE user_id IN (SELECT user_id FROM applicants)
+         AND ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+)
+
+, first_ride AS (
+      SELECT user_id 
+             ,  MIN_BY(region, dropped_off_at) AS first_region
+             ,  MIN(dropped_off_at) AS first_dropoff
+        FROM schema.table_base_rides
+       WHERE user_id IN (SELECT user_id FROM applicants)
+         AND ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+         AND dropped_off_at >= CURRENT_DATE - INTERVAL '30' DAY
+    GROUP BY 1
+)
+
+--> 5pts
+, queued AS (
+      SELECT *
+        FROM schema.table_event_trigger_group_executed
+       WHERE CAST(ds AS DATE) > CURRENT_DATE - INTERVAL '30' DAY 
+         AND CAST(occurred_at AS DATE)  > CURRENT_DATE - INTERVAL '30' DAY 
+         AND trigger_group_name = 'FraudRideAuditTriggerGroup'
+         AND response_reason = 'AuditUnauthDrivingLinkRule'
+)
+
+--> 4pts
+, suspicious_email AS ( 
+      SELECT ap.applied_at 
+             ,  us.email
+             ,  ap.user_id
+             ,  ap.region_applied
+             ,  ap.region_approved
+             ,  ap.bonus_type
+             ,  CASE WHEN ad.code IS NOT NULL THEN ad.code ELSE ap.bonus_code END AS code
+             ,  ad.incentive_amount AS incentive_exposure
+             ,  gp.payout_amount + gp.referrer_payment AS total_loss
+             ,  ob.off_board_reason
+        FROM applicants ap 
+   LEFT JOIN activated_drivers ad 
+          ON ad.user_id = ap.user_id 
+   LEFT JOIN first_ride fr 
+          ON fr.user_id = ap.user_id
+   LEFT JOIN off_boards ob 
+          ON ob.user_id = ap.user_id  
+   LEFT JOIN guarantee_payouts gp 
+          ON gp.user_id = ap.user_id 
+   LEFT JOIN schema.table_event_user_signup us 
+          ON us.user_id = ap.user_id 
+         AND us.ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+       WHERE email LIKE '%chicago.gb.net%' OR email LIKE '%mybox.one%' OR email LIKE '%boranora.com%' OR email LIKE '%proton.me%' 
+             OR email LIKE '%pm.me%' OR email LIKE '%chicago.gb.net%' OR email LIKE '%onebeusa.com%' OR email LIKE '%appbeusa.com%'
+             OR email LIKE '%toyota2023.33mail.com%' OR email LIKE '%bestlft.com%'
+         AND ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+         AND us.ds >= CAST(CURRENT_DATE - INTERVAL '30' DAY AS VARCHAR)
+         AND ob.off_board_reason IS NULL 
+    GROUP BY 1,2,3,4,5,6,7,8,9,10
+)
+
+--> 3pts 
+, emailage AS (
+      select email_existence_status
+            , emailage_score
+            , fraud_risk
+            , domain_risk_level
+            , emailage_advice
+            , emailage_risk_band
+            , emailage_reason
+            , CASE WHEN o.user_id IS NOT NULL THEN 1 ELSE 0 END AS fraud_flag
+            , CASE WHEN i.user_id IS NOT NULL THEN 1 ELSE 0 END AS high_alert_incentives
+            , CASE WHEN t.user_id IS NOT NULL THEN 1 ELSE 0 END AS already_identified
+            , b.user_id
+        FROM driver_base_emailage b 
+   LEFT JOIN emailage_two e 
+          ON b.user_id = e.triggering_user_id
+   LEFT JOIN off_boards o
+          ON b.user_id = o.user_id
+   LEFT JOIN incentives i 
+          ON b.user_id = i.user_id
+   LEFT JOIN identified t 
+          ON b.user_id = t.user_id
+       WHERE domain_risk_level = 'Very High'
+)
+
+--> 2pts 
+, approved_activated_mismatch AS (
+      SELECT ad.applied_at 
+             ,  ad.user_id 
+             ,  ad.email
+             ,  ad.region_applied
+             ,  ad.region_approved
+             ,  ad.region_activated 
+             ,  SUM(gi.incentive_value) AS incentive_value
+             ,  SUM(gi.amount_paid) AS amount_paid
+             ,  CASE WHEN ob.off_board_reason IS NOT NULL THEN 'yes' ELSE 'no' END AS off_boarded
+        FROM applied_drivers ad 
+   LEFT JOIN off_boards ob 
+          ON ob.user_id = ad.user_id 
+   LEFT JOIN guarantee_info gi 
+          ON gi.user_id = ad.user_id 
+       WHERE ob.off_board_reason IS NULL
+         AND ad.region_applied != ad.region_activated
+         AND ad.region_activated IN ('LAX', 'SFO', 'MIA')
+   GROUP BY 1,2,3,4,5,6,9
+)
+
+--> 1pt
+, shipping_approved_mismatch AS (
+      SELECT gi.user_id
+             ,  db.applied_at 
+             ,  db.shipping_state
+             ,  db.state_approved
+             ,  gi.incentive_value
+             ,  SUM(gp.payout_amount) AS payout_amount
+        FROM guarantee_info gi 
+        JOIN driver_base_shipping db
+          ON gi.user_id = db.user_id
+   LEFT JOIN off_boards ob 
+          ON ob.user_id = gi.user_id  
+   LEFT JOIN guarantee_payouts gp 
+          ON gp.user_id = gi.user_id 
+       WHERE shipping_state != state_approved 
+         AND state_approved IN ('IL')
+         AND ob.off_board_reason IS NULL
+    GROUP BY 1,2,3,4,5
+)
+
+, fraud_score_prep AS (
+      SELECT faf.user_id 
+             ,  IF(q.user_id IS NOT NULL, 5, 0) AS queued
+             ,  IF(s.user_id IS NOT NULL, 4, 0) AS suspicious_email 
+             ,  IF(e.user_id IS NOT NULL, 3, 0) AS emailage
+             ,  IF(a.user_id IS NOT NULL, 2, 0) AS approved_activated_mismatch
+             ,  IF(m.user_id IS NOT NULL, 1, 0) AS shipping_approved_mismatch
+        FROM core.fact_applicant_funnel faf 
+   LEFT JOIN queued q
+          ON faf.user_id = q.user_id 
+   LEFT JOIN suspicious_email s
+          ON faf.user_id = s.user_id 
+   LEFT JOIN emailage e 
+          ON faf.user_id = e.user_id 
+   LEFT JOIN approved_activated_mismatch a
+          ON faf.user_id = a.user_id 
+   LEFT JOIN shipping_approved_mismatch m
+          ON faf.user_id = m.user_id 
+)
+
+, fraud_score AS ( 
+      SELECT user_id
+             ,  (queued + suspicious_email + emailage + approved_activated_mismatch + shipping_approved_mismatch) AS fraud_score 
+        FROM fraud_score_prep 
+)
+
+, email_extract AS ( 
+      SELECT user_id   
+             ,  SUBSTR(REGEXP_REPLACE(REGEXP_EXTRACT(TRIM(LOWER(email)), '(@.*)'), '\s|\%20|\@', ''), --find in full domain no whitespace, 
+                    1, --starting at position 1, the beginning of string 
+                    LENGTH(REGEXP_REPLACE(REGEXP_EXTRACT(TRIM(LOWER(email)), '(@.*)'), '\s|\%20|\@', '')) 
+                        - STRPOS(REVERSE(REGEXP_REPLACE(REGEXP_EXTRACT(TRIM(LOWER(email)), '(@.*)'), '\s|\%20|\@', '')), '.')) --up to the last period, length of the string minus the position of last period
+                    AS email_domain
+        FROM schema.table_core_applicants 
+)
+
+      SELECT d.user_id --> Users id 
+             ,  a.email --> Users email 
+             ,  d.actor --> Email for agent who actioned the document 
+             ,  CASE WHEN LOWER(d.actor) LIKE '%ibex%' THEN 'ibex' 
+                     WHEN LOWER(d.actor) LIKE '%-egs%' THEN 'alorica' 
+                     WHEN LOWER(d.actor) LIKE '%onelink%' THEN 'onelink'
+                     WHEN LOWER(d.actor) LIKE '%intouch%' THEN 'intouch'
+                     WHEN LOWER(d.actor) LIKE '%sutherland%' THEN 'sutherland'
+                     ELSE 'internal' END AS site --> Site location of the agent who actioned the document 
+             ,  d.document_id --> Distinct ID of the document 
+             ,  d.document_type --> the type of document that was reviewed  
+             ,  dr.state --> Users state based on the home/preferred region 
+             ,  a.region_home --> Users home/preferred region 
+             ,  CASE WHEN d.rejected_reason LIKE ('%"%') THEN SUBSTR(d.rejected_reason, 2, (LENGTH(d.rejected_reason) - 2))
+                     ELSE d.rejected_reason END AS rejected_reason --> If the document is rejected, this is the reason given by the agent as to why it was rejected 
+             ,  d.status --> the action taken on the document (approved or rejected)
+             ,  d.vehicle_id --> If the document is a vehicle document, this is the id of the vehicle it was uploaded to
+             ,  d.occurred_at --> when the action took place 
+             ,  d.status_changed --> Flags if this was a new action or just updating the document information 
+             ,  ee.email_domain --> the domain of the users email 
+             ,  CASE WHEN fs.fraud_score = 0 THEN 'None'
+                     WHEN fs.fraud_score = 1 THEN 'Very Low'
+                     WHEN fs.fraud_score = 2 THEN 'Low'
+                     WHEN fs.fraud_score = 3 THEN 'Medium'
+                     WHEN fs.fraud_score = 4 THEN 'High'
+                     WHEN fs.fraud_score >= 5 THEN 'Very High'
+                     END AS fraud_score --> general scoring based on known fraud flags 
+             ,  IF(r.email_list IS NOT NULL, TRUE, FALSE) AS is_doc_review --> flags if this was reviewed by a Driver Enabelment document review agent or not
+             ,  MAX(d.occurred_at) AS time --> The most recent timestamp associated wih this document 
+             ,  ROW_NUMBER() OVER (PARTITION BY d.actor, d.document_id ORDER BY d.occurred_at DESC) AS rank
+        FROM schema.table_event_driver_docs_document_change d
+        JOIN schema.table_core_applicants a
+          ON d.user_id = a.user_id
+        JOIN schema.table_core_dim_regions dr 
+          ON a.region_home = dr.region 
+   LEFT JOIN schema.table_default_doc_review_combined_roster r
+          ON r.email_list = d.actor
+   LEFT JOIN email_extract ee 
+          ON a.user_id = ee.user_id 
+   LEFT JOIN fraud_score fs
+          ON a.user_id = fs.user_id 
+       WHERE (d.status != 'pending' AND d.status != 'waiting' AND d.status != 'expired' AND d.status != 'processing') --> Limits to only approval and rejection events 
+         AND (d.rejected_reason != '"replaced"' OR d.rejected_reason IS NULL) --> Removes instances of the "replaced" document rejection reason. This is a deprecated legacy reject reason
+         AND d.url IS NOT NULL --> Ensures there was a picture uploaded with the document
+         AND d.service = 'supplyrecords'
+         AND d.ds > '2017-12-01'
+         AND TRIM(d.actor) LIKE ('%@company.com') --> Restricts to only documents actioned by a user; Eliminates auto-triggers and migrations 
+         AND d.status_changed = TRUE
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+    ORDER BY RAND()
