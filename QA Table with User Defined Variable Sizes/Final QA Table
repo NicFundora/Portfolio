@@ -1,0 +1,49 @@
+WITH 
+bucketed AS (
+      SELECT *
+             ,  NTILE(1000) OVER() AS ntile 
+        FROM etl.document_qa_master 
+       WHERE time BETWEEN DATE('{{start_date}}') AND DATE('{{end_date}}')
+         AND document_type IN ({{document_type}})
+         AND state IN ({{state}})
+         AND region_home IN ({{region}})
+         AND actor IN ({{agent}})
+         AND (email_domain IN ('{{ email | replace: ", ","','" }}') OR '{{email}}' = '')
+         AND site IN ({{site}})
+         AND (rejected_reason IN ({{rejected_reason}}) OR ARRAY[{{rejected_reason}}] = ARRAY[''])
+         AND status IN ({{status}})
+         AND (CAST(is_doc_review AS VARCHAR) = {{doc_review}} OR {{doc_review}} = '')
+         AND fraud_score IN ({{fraud_score}})
+) 
+
+, pct AS (
+      SELECT user_id 
+             ,  actor 
+             ,  document_id 
+             ,  document_type
+             ,  state
+             ,  region_home
+             ,  rejected_reason
+             ,  status
+             ,  vehicle_id 
+             ,  occurred_at 
+             ,  site 
+             --> Not part of current QA pull formatting but are included parameters 
+             ,  email
+             ,  email_domain
+             ,  time
+             ,  is_doc_review 
+             --> Adding these to match the formatting of the exisiting QA process only
+             ,  'https://profile.company.net/users/' || CAST(user_id AS VARCHAR) || '/vehicles-and-documents' AS tom_link
+             ,  'https://profile.company.net/users/'||CAST(user_id AS VARCHAR)||'/quick-approve/'||REGEXP_REPLACE(document_id, '\/', '-')||'?documentName='||document_type AS quick_approve_link
+             ,  NULL AS is_calibration 
+             ,  NULL AS evaluation_date 
+             ,  NULL AS evaluator_name 
+             ,  ROW_NUMBER() OVER(PARTITION BY actor) AS row_num
+        FROM bucketed
+       WHERE (ntile * 1.00) / 10.00 <= {{percentage}}
+) 
+
+      SELECT * 
+        FROM pct 
+       WHERE row_num <= {{row_num}}
