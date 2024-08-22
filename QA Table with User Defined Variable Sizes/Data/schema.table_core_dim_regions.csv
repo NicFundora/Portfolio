@@ -1,0 +1,101 @@
+region,is_active,city,state,country,currency_code,locale,timezone,geometry,updated_at,updated_by
+CZT,True,Northern Georgia,GA,US,USD,en_US,America/New_York,023426546139253431289,2023-03-16 21:13:37.734,charles17@mail.com
+IVT,True,Providence,RI,US,USD,en_US,America/New_York,030518952710863909186,2024-07-18 16:16:24.632,matthewstracy@example.com
+BKI,True,Denver,CO,US,USD,en_US,America/Denver,329346625556426373803,2023-03-16 20:31:25.306,mollymclaughlin@demo.com
+ETG,True,Manchester,NH,US,USD,en_US,America/New_York,410870692164614187601,2023-03-16 20:45:22.292,palmersarah@demo.com
+AYB,True,Baton Rouge,LA,US,USD,en_US,America/Chicago,144793429724037249894,2023-03-16 20:31:25.306,hellis@test.com
+YZZ,False,Saguenay,QC,CA,CAD,en_CA,America/New_York,386941412141813297843,2024-07-24 17:11:38.025,avilaluis@example.com
+AYF,True,Fargo,ND,US,USD,en_US,America/Chicago,929099609739445455935,2023-03-16 20:31:25.306,danielle04@demo.com
+ZWB,True,NYC Simulated,NY,US,USD,en_US,America/Los_Angeles,762319712814332520390,2023-08-16 20:20:32.293,simpsonmelissa@example.com
+FBP,True,Youngstown,OH,US,USD,en_US,America/New_York,704355798143709114751,2023-03-16 21:13:37.734,benjamin18@mail.com
+RKZ,False,Jakarta Simulation,CA,US,USD,en_US,America/Los_Angeles,545335652690064375259,2022-09-28 18:32:04.013,robinsongrace@example.com
+YAR,True,Houston Simulated,TX,US,USD,en_US,America/Los_Angeles,120954880568802849451,2022-09-28 18:32:04.013,qsmith@test.com
+FNY,False,Regina,SK,CA,CAD,en_CA,America/Denver,500642239280762009862,2023-03-16 21:13:37.734,kenneth48@test.com
+LNI,True,Rapid City,SD,US,USD,en_US,America/Denver,432922478070483495983,2023-03-16 21:13:37.734,obush@mail.com
+ACE,True,Williamsport,PA,US,USD,en_US,America/New_York,774583035027303154076,2023-03-16 20:45:22.292,abigailrichards@example.com
+TUV,True,Sacramento,CA,US,USD,en_US,America/Los_Angeles,569981709706337231582,2023-03-16 21:13:37.734,davidmartinez@example.com
+KIV,True,Charleston,SC,US,USD,en_US,America/New_York,561997856178467467874,2023-03-16 20:31:25.306,gshannon@mail.com
+YTZ,True,Greater South Dakota,SD,US,USD,en_US,America/Chicago,978867485663970643737,2023-03-16 20:31:25.306,melanievance@mail.com
+YRX,True,Fairbanks,AK,US,USD,en_US,America/Anchorage,009679421549164409691,2023-03-16 20:31:25.306,druiz@example.com
+REM,False,Trois-Rivieres,QC,CA,CAD,en_CA,America/New_York,011158548835216570674,2024-07-23 22:24:22.560,christineperez@demo.com
+LWU,True,Colorado Springs,CO,US,USD,en_US,America/Denver,632358185237844221384,2023-03-16 20:31:25.306,robbinskylie@example.com
+ZWH,True,Inland Empire,CA,US,USD,en_US,America/Los_Angeles,227234691690821494871,2023-03-16 21:13:37.734,glenn40@test.com
+BMD,True,Martinsburg,WV,US,USD,en_US,America/New_York,411738318291709642432,2023-03-16 20:45:22.292,msawyer@mail.com
+QYZ,True,Fayetteville,NC,US,USD,en_US,America/New_York,601642387092221015841,2023-03-16 20:31:25.306,scarter@demo.com
+ZJU,True,Toccoa,GA,US,USD,en_US,America/New_York,668753345836081968152,2023-03-16 21:13:37.734,andre59@example.com
+LQO,True,Indianapolis,IN,US,USD,en_US,America/Indiana/Indianapolis,112677721963647048383,2023-03-16 20:45:22.292,cperry@mail.com
+TEO,False,Nanaimo,BC,CA,CAD,en_CA,America/Los_Angeles,655070423328868003878,2023-03-16 21:13:37.734,antoniolandry@test.com
+GRV,True,Outer Banks,NC,US,USD,en_US,America/New_York,008808988070917965965,2023-03-16 21:13:37.734,elizabethbolton@demo.com
+IJI,True,Columbus,GA,US,USD,en_US,America/New_York,820888151598589350965,2023-03-16 20:31:25.306,jacob98@example.com
+OLW,True,Bismarck,ND,US,USD,en_US,America/Chicago,229258931968744311185,2023-03-16 20:31:25.306,griffithbridget@mail.com
+KQZ,True,Gainesville,FL,US,USD,en_US,America/New_York,070379591385523795306,2023-03-16 20:31:25.306,velazquezlacey@demo.com
+ATT,True,Grants Pass,OR,US,USD,en_US,America/Los_Angeles,560732303257447935024,2023-03-16 20:31:25.306,michael34@mail.com
+AJI,True,Seattle Simulated,WA,US,USD,en_US,America/Los_Angeles,328477585161173290417,2022-09-28 18:32:04.013,william72@test.com
+ESL,True,Gulfport-Biloxi,MS,US,USD,en_US,America/Chicago,620837322369052598301,2023-03-16 21:13:37.734,danielpacheco@example.com
+NSR,True,Clarksville,TN,US,USD,en_US,America/Chicago,577660328184354528636,2023-03-16 20:31:25.306,kvaughn@test.com
+SBI,True,Victorville,CA,US,USD,en_US,America/Los_Angeles,832801108313054513341,2024-05-16 17:29:17.612,holly78@test.com
+RUZ,True,Rochester,NY,US,USD,en_US,America/New_York,353279620039878660093,2023-03-16 21:13:37.734,crystalwilcox@example.com
+VQK,True,Austin,TX,US,USD,en_US,America/Chicago,824851155799339673015,2023-03-16 19:53:43.191,eperry@test.com
+LXV,False,Dead Region,CA,US,USD,en_US,America/Los_Angeles,674593121289376006269,2023-03-16 21:13:37.734,john61@test.com
+REX,True,Chico,CA,US,USD,en_US,America/Los_Angeles,329028245165705399192,2023-03-16 20:31:25.306,gsmith@demo.com
+VJM,True,Los Angeles Simulated,CA,US,USD,en_US,America/Los_Angeles,980854415044744825912,2022-09-28 18:32:04.013,david44@mail.com
+OSW,True,Mobile,AL,US,USD,en_US,America/Chicago,014651850139806350806,2023-03-16 20:45:22.292,bcampos@example.com
+RCJ,True,Midland,MI,US,USD,en_US,America/New_York,590419310290386825210,2023-03-16 20:45:22.292,fishercharles@test.com
+VAD,True,Pittsburgh,PA,US,USD,en_US,America/New_York,586678869518684773025,2023-03-16 21:13:37.734,seanjones@mail.com
+FSK,True,Woodward,OK,US,USD,en_US,America/Chicago,379201694632089624647,2023-03-16 21:13:37.734,rshannon@example.com
+KVS,True,City of Toronto,ON,CA,CAD,en_CA,America/New_York,075549405506221059570,2023-03-16 21:13:37.734,dawn23@test.com
+EVE,True,Alexandria,LA,US,USD,en_US,America/Chicago,200229141456071800800,2023-03-16 19:53:43.191,robertboyle@demo.com
+TIZ,True,"Oxford, MS",MS,US,USD,en_US,America/Chicago,797666065699438645433,2023-03-16 21:13:37.734,clifford55@mail.com
+DSA,True,Johnson City,TN,US,USD,en_US,America/New_York,277046527651264873616,2023-03-16 21:13:37.734,kvazquez@mail.com
+BGE,True,Utica,NY,US,USD,en_US,America/New_York,282346130652941030841,2023-03-16 21:13:37.734,drodgers@example.com
+NXW,True,Miami Simulated,FL,US,USD,en_US,America/Los_Angeles,461643423171025001868,2022-09-28 18:32:04.013,kristen57@demo.com
+TKJ,True,Santa Cruz,CA,US,USD,en_US,America/Los_Angeles,691532833384125255927,2023-03-16 20:31:25.306,ianlee@test.com
+IEX,True,Allentown,PA,US,USD,en_US,America/New_York,468930798293899895266,2023-03-16 19:53:43.191,jonathanmorrow@demo.com
+SYJ,True,Houma,LA,US,USD,en_US,America/Chicago,921010458510139753240,2023-03-16 19:53:43.191,lisaross@mail.com
+JXR,True,Tulsa,OK,US,USD,en_US,America/Chicago,536799702420903423992,2023-03-16 21:13:37.734,phillipmontoya@example.com
+KQN,True,Fayetteville,AR,US,USD,en_US,America/Chicago,580985185514423764581,2023-03-16 21:13:37.734,elizabethflores@mail.com
+YEF,True,Eastern Arizona,AZ,US,USD,en_US,America/Phoenix,575452080788663986257,2023-03-16 20:31:25.306,xsmith@example.com
+YBP,True,Unknown,CA,US,USD,en_US,America/Los_Angeles,676956674339027817211,2022-09-28 18:32:04.013,jodyblackburn@test.com
+WPH,True,Aberdeen,SD,US,USD,en_US,America/Chicago,079421216168199230929,2023-03-16 19:53:43.191,alice25@demo.com
+MPI,True,York,PA,US,USD,en_US,America/New_York,256856057027683541605,2023-03-16 21:13:37.734,kimberlycalderon@demo.com
+BDR,True,Roseburg,OR,US,USD,en_US,America/Los_Angeles,193519596693894037722,2023-03-16 21:13:37.734,jason38@example.com
+UPO,True,Mid-Hudson,NY,US,USD,en_US,America/New_York,166809206466334401770,2023-03-16 21:13:37.734,randall04@demo.com
+CQE,True,Watertown,NY,US,USD,en_US,America/New_York,746785768522916883016,2023-03-16 19:53:43.191,ynolan@example.com
+ZGA,False,London,CA,US,USD,en_US,America/Chicago,300416651495521883622,2023-03-16 20:45:22.292,rossscott@demo.com
+PZR,True,Champaign,IL,US,USD,en_US,America/Chicago,994091649853039495819,2023-03-16 20:31:25.306,fthompson@mail.com
+DTS,True,Simulated San Francisco,CA,US,USD,en_US,America/Los_Angeles,999522995631570377426,2022-09-28 18:32:04.013,dchavez@test.com
+BBR,True,Richmond,VA,US,USD,en_US,America/New_York,569646577584461320067,2023-03-16 21:13:37.734,bsmith@demo.com
+OTC,True,Knoxville,TN,US,USD,en_US,America/New_York,310224629270991338405,2023-03-16 21:13:37.734,mestrada@test.com
+TVM,True,Ithaca,NY,US,USD,en_US,America/New_York,725408293063389203280,2023-03-16 20:45:22.292,beth80@test.com
+RSO,False,Red Deer,AB,CA,CAD,en_CA,America/Denver,018502015283799689846,2023-03-16 21:13:37.734,michaelreilly@mail.com
+JIJ,True,Kankakee,IL,US,USD,en_US,America/Chicago,783591463751127588073,2023-03-16 20:45:22.292,lwelch@example.com
+NSA,True,Albuquerque,NM,US,USD,en_US,America/Denver,851073664424754140255,2023-03-16 19:53:43.191,clarkkimberly@demo.com
+WKI,True,Bakersfield,CA,US,USD,en_US,America/Los_Angeles,309536756179404458544,2023-03-16 20:31:25.306,zacharyjones@example.com
+GWM,True,Baltimore,MD,US,USD,en_US,America/New_York,211104433391889427094,2023-03-16 20:31:25.306,benjaminramos@mail.com
+TWP,True,Dublin,GA,US,USD,en_US,America/New_York,463861256020437552014,2023-03-16 20:31:25.306,rebecca29@mail.com
+INR,True,Cleveland,OH,US,USD,en_US,America/New_York,136394288380251271950,2023-03-16 20:31:25.306,rmendoza@demo.com
+GVK,False,None,CA,US,USD,en_US,America/Los_Angeles,638972090796593058384,2022-09-28 18:32:04.013,swalters@mail.com
+UXS,True,Rochester,MN,US,USD,en_US,America/Chicago,594096742955764310636,2023-03-16 21:13:37.734,owensregina@test.com
+MGQ,True,Charlotte,NC,US,USD,en_US,America/New_York,393237090293333695566,2023-03-16 20:31:25.306,wbrooks@demo.com
+SIY,True,Fort Wayne,IN,US,USD,en_US,America/New_York,834241261609504835716,2023-03-16 20:31:25.306,matthewparker@demo.com
+VNN,True,Bloomington,IN,US,USD,en_US,America/New_York,283366379755558133663,2023-03-16 20:31:25.306,claire51@demo.com
+VPL,True,Simulated Cedar Rapids,IA,US,USD,en_US,America/Chicago,869530035411467809972,2022-09-28 18:32:04.013,zrichards@test.com
+NWH,True,Salt Lake City,UT,US,USD,en_US,America/Denver,851182764100858335443,2023-03-16 21:13:37.734,wardemily@example.com
+AZU,True,Tacoma,WA,US,USD,en_US,America/Los_Angeles,364412229528413187943,2023-03-16 21:13:37.734,megan86@test.com
+ECW,True,Jacksonville,NC,US,USD,en_US,America/New_York,865352448359272071426,2023-03-16 21:13:37.734,joseph77@mail.com
+PRD,True,Rio Grande Valley,TX,US,USD,en_US,America/Chicago,700259866646794419673,2023-03-16 20:45:22.292,kbrooks@test.com
+TKW,True,Greater Alaska,AK,US,USD,en_US,America/Juneau,952631397930018264092,2023-03-16 19:53:43.191,toddbruce@example.com
+TMS,True,Fredericksburg,VA,US,USD,en_US,America/New_York,901862862775726610385,2023-03-16 20:31:25.306,jamessanchez@mail.com
+VZU,False,Dead Region,WI,US,USD,en_US,America/Chicago,382143989253128658339,2023-03-16 20:31:25.306,vhebert@test.com
+INO,True,Hickory,NC,US,USD,en_US,America/New_York,407162133633227581334,2023-03-16 20:45:22.292,tthornton@test.com
+RHY,False,Saint John,NB,CA,CAD,en_CA,America/Moncton,740793778160355490423,2023-03-16 21:13:37.734,yvega@mail.com
+DEP,True,Seattle,WA,US,USD,en_US,America/Los_Angeles,884859530192584146436,2023-03-16 21:13:37.734,vanessa59@test.com
+XYE,True,Virginia Beach-Hampton Roads,VA,US,USD,en_US,America/New_York,355868681131346543501,2023-03-16 21:13:37.734,xortiz@demo.com
+GNT,True,Cheyenne,WY,US,USD,en_US,America/Denver,902699396594175915998,2023-03-16 20:31:25.306,pesparza@mail.com
+IHQ,True,Auburn,AL,US,USD,en_US,America/Chicago,785940465802481907476,2023-03-16 19:53:43.191,bwiggins@test.com
+SFS,True,Minneapolis Simulated,MN,US,USD,en_US,America/Los_Angeles,887765659583987881654,2022-09-28 18:32:04.013,linda67@test.com
+FFA,True,Lexington,KY,US,USD,en_US,America/New_York,954562103094604691203,2023-03-16 20:45:22.292,christopher11@demo.com
+RIG,True,Victoria,TX,US,USD,en_US,America/Chicago,829705242136432027342,2023-03-16 21:13:37.734,mmitchell@mail.com
+AID,True,Fort Myers,FL,US,USD,en_US,America/New_York,783818230255661042096,2023-03-16 21:13:37.734,bperez@example.com
+KIG,False,Saskatoon,SK,CA,CAD,en_CA,America/Denver,658985007097210873235,2023-03-16 21:13:37.734,nrobertson@test.com
+ENW,True,Florida Keys,FL,US,USD,en_US,America/New_York,247047058862134668172,2023-03-16 20:31:25.306,mark42@example.com
