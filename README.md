@@ -29,7 +29,6 @@ Throughout these projects, I have utilized a range of tools and technologies, in
 
 Feel free to browse through the project folders to review the code, data, and results. Each project folder contains:
 
-- **README.md**: An overview of the project, including the problem statement, data description, and key findings.
 - **Code**: The scripts used for data processing, analysis, and visualization.
 - **Data**: Sample datasets used in the analysis (anonymized).
 - **Results**: Outputs such as charts, tables, and reports.
